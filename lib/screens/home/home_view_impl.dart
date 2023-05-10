@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:real_social_assignment/services/auth.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return ElevatedButton(
+      child: const Text("sign out"),
+      onPressed: () => AuthService().signOut(),
+    );
   }
 }

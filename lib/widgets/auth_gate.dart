@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:real_social_assignment/screens/home/home_view_impl.dart';
 
+import '../screens/auth/sign_in_view_impl.dart';
+
 class AuthGate extends StatelessWidget {
   const AuthGate({Key? key}) : super(key: key);
 
@@ -14,7 +16,7 @@ class AuthGate extends StatelessWidget {
           return SignInScreen();
         }
 
-        return const Home();
+        return const HomeScreen();
       },
     );
   }

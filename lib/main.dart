@@ -17,13 +17,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'RealSocial Assignment',
-      theme: ThemeData(
-        primarySwatch: MaterialColor(
-            const Color.fromRGBO(171, 144, 255, 1).value, const {}),
-      ),
-      home: const AuthGate(),
+      home: AuthGate(),
     );
   }
 }
+
+//Color.fromRGBO(171, 144, 255, 1)
