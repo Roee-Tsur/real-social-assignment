@@ -5,7 +5,7 @@ import '../models/user.dart';
 class DatabaseService {
   static final DatabaseService _singleton = DatabaseService._internal();
 
-  ///class responsible for all things related to authentication
+  ///class responsible for all things related to database
   factory DatabaseService() {
     return _singleton;
   }
@@ -21,8 +21,11 @@ class DatabaseService {
         fromFirestore: User.fromFirestore, toFirestore: User.toFirestore);
   }
 
-  listenToUser(String userId) {
+  listenToUser({required String userId, required void Function(User) onUser}) {
     _usersCollection.doc(userId).snapshots().listen((event) {
+      if (event.exists) {
+        onUser(event.data()!);
+      }
     });
   }
 }

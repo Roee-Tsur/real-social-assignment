@@ -4,8 +4,9 @@ class User {
   String? email;
   String? displayName;
   List places;
+  String id;
 
-  User({this.email, this.displayName, required this.places});
+  User({required this.id, this.email, this.displayName, required this.places});
 
   static User fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
       SnapshotOptions? options) {
@@ -14,9 +15,10 @@ class User {
       throw "error in fromFirestore User";
     }
     return User(
-        places: data["places"],
-        displayName: data["displayName"],
-        email: data["email"]);
+        id: snapshot.id,
+        places: data[UserFieldNames.places],
+        displayName: data[UserFieldNames.displayName],
+        email: data[UserFieldNames.email]);
   }
 
   static Map<String, Object?> toFirestore(User? user, SetOptions? options) {
@@ -24,9 +26,16 @@ class User {
       return {};
     }
     return {
-      "places": user.places,
-      "displayName": user.displayName,
-      "email": user.email
+      UserFieldNames.places: user.places,
+      UserFieldNames.displayName: user.displayName,
+      UserFieldNames.email: user.email
     };
   }
+}
+
+class UserFieldNames {
+  static const id = 'id';
+  static const places = 'places';
+  static const displayName = 'displayName';
+  static const email = 'email';
 }
