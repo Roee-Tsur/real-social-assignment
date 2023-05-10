@@ -1,0 +1,1 @@
+const globalPadding = 16;

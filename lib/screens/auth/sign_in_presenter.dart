@@ -4,13 +4,18 @@ import 'auth_model.dart';
 
 class SignInPresenter {
   late SignInView view;
-  late AuthModel model;
+  late AuthModel _model;
 
   SignInPresenter() {
-    model = AuthModel();
+    _model = AuthModel();
   }
 
   Future<void> signInWithGoogleClicked() async {
-    await model.signInWithGoogle();
+    await _model.signInWithGoogle();
+  }
+
+  void signInWithEmailClicked(
+      {required String email, required String password}) {
+    _model.signInWithEmail(email: email, password: password);
   }
 }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/rs_text_field.dart';
 import 'sign_up_presenter.dart';
 import 'sign_up_view.dart';
 
 class SignUpScreen extends StatelessWidget implements SignUpView {
   SignUpScreen({super.key});
   final presenter = SignUpPresenter();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +26,39 @@ class SignUpScreen extends StatelessWidget implements SignUpView {
               ElevatedButton(
                   onPressed: () => presenter
                       .signUpWithGoogleClicked()
-                      .then((value) => Navigator.pop(context)),
+                      .then((value) => value ? Navigator.pop(context) : null),
                   child: const Text("Sign up with Google")),
               const Text("Or"),
+              Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      RSTextField(
+                          label: "Email",
+                          controller: emailController,
+                          type: TextInputType.emailAddress),
+                      RSTextField(
+                        label: "Password",
+                        controller: passwordController,
+                        isPassword: true,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState != null &&
+                                formKey.currentState!.validate()) {
+                              FocusScope.of(context).unfocus();
+
+                              presenter
+                                  .signUpWithEmailClicked(
+                                      email: emailController.text,
+                                      password: passwordController.text)
+                                  .then((value) =>
+                                      value ? Navigator.pop(context) : null);
+                            }
+                          },
+                          child: const Text("Sign up"))
+                    ],
+                  )),
             ]),
       ),
     );
