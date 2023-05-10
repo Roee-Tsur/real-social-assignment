@@ -28,7 +28,7 @@ class SignInScreen extends StatelessWidget implements SignInView {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: () => presenter.signInWithGoogleClicked,
+                  onPressed: presenter.signInWithGoogleClicked,
                   child: const Text("Sign in with Google")),
               const Text("Or"),
               Form(

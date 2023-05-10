@@ -16,7 +16,7 @@ class AuthGate extends StatelessWidget {
           return SignInScreen();
         }
 
-        return const HomeScreen();
+        return HomeScreen(snapshot.data!.uid);
       },
     );
   }

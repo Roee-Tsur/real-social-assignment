@@ -14,7 +14,7 @@ class AuthService {
 
   AuthService._internal();
 
-  signOut() {
+  void signOut() {
     _firebaseAuth.signOut();
     _googleSignIn.signOut();
   }
