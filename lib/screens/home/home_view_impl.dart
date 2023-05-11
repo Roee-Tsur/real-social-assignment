@@ -22,8 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> implements HomeView {
-  final double defaultZoom = 10.5;
-
   Location location = Location();
   LocationData? currentLocation;
 
@@ -31,7 +29,9 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
   bool locationPermissionGranted = false;
   bool isStyleLoaded = false;
   MapboxMapController? mapController;
+
   bool isCameraPositionInitialized = false;
+  bool isSymbolsInitialized = false;
 
   User? user;
 
@@ -50,11 +50,35 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
 
   @override
   Widget build(BuildContext context) {
-    if (!locationPermissionGranted) {
-      return const Text("no permission");
+    if (!locationPermissionGranted || !serviceEnabled) {
+      return const Scaffold();
     }
-    if (!serviceEnabled) {
-      return const Text("service disabled");
+
+    if (!isCameraPositionInitialized &&
+        mapController != null &&
+        currentLocation != null) {
+      mapController!.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              zoom: Config.defaultZoom,
+              target: LatLng(
+                  currentLocation!.latitude!, currentLocation!.longitude!))));
+      setState(() {
+        isCameraPositionInitialized = true;
+      });
+    }
+
+    if (isStyleLoaded &&
+        !isSymbolsInitialized &&
+        mapController != null &&
+        currentLocation != null) {
+      mapController!.addSymbol(
+        SymbolOptions(
+            geometry:
+                LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+            iconImage: AssetPaths.currentLocation,
+            iconSize: 0.15),
+      );
+      setState(() {});
     }
 
     return Scaffold(
@@ -76,8 +100,8 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
       body: MapboxMap(
         accessToken: Config.MAP_BOX_PUBLIC_API_KEY,
         //default initial camera position is tel aviv
-        initialCameraPosition: CameraPosition(
-            target: const LatLng(32.075982, 34.787155), zoom: defaultZoom - 1),
+        initialCameraPosition: const CameraPosition(
+            target: LatLng(32.075982, 34.787155), zoom: Config.defaultZoom - 1),
         // marking this as true makes the app crash on Navigator.pop()
         myLocationEnabled: false,
         onStyleLoadedCallback: onStyleLoaded,
@@ -119,17 +143,9 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
       }
     }
     location.getLocation().then((value) {
-      if (value.latitude != null && value.longitude != null) {
-        if (mapController != null) {
-          mapController!.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  zoom: defaultZoom,
-                  target: LatLng(value.latitude!, value.longitude!))));
-        }
-        setState(() {
-          currentLocation = value;
-        });
-      }
+      setState(() {
+        currentLocation = value;
+      });
     });
   }
 
@@ -139,13 +155,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     });
     if (currentLocation != null && !isCameraPositionInitialized) {
       if (currentLocation!.latitude != null &&
-          currentLocation!.longitude != null) {
-        mapController!.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-                zoom: defaultZoom,
-                target: LatLng(
-                    currentLocation!.latitude!, currentLocation!.longitude!))));
-      }
+          currentLocation!.longitude != null) {}
     }
   }
 
@@ -153,15 +163,5 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     setState(() {
       isStyleLoaded = true;
     });
-
-    if (mapController != null && currentLocation != null) {
-      mapController!.addSymbol(
-        SymbolOptions(
-            geometry:
-                LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            iconImage: AssetPaths.currentLocation,
-            iconSize: 0.15),
-      );
-    }
   }
 }
