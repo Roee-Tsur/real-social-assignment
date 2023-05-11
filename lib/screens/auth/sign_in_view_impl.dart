@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:real_social_assignment/utils/design.dart';
 import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 import 'sign_in_presenter.dart';
@@ -17,10 +18,7 @@ class SignInScreen extends StatelessWidget implements SignInView {
   Widget build(BuildContext context) {
     presenter.view = this;
     return Scaffold(
-      appBar: AppBar(
-          shape: const RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.vertical(bottom: Radius.circular(16)))),
+      appBar: AppBar(shape: appBarShape),
       body: Center(
         child: Column(
             mainAxisSize: MainAxisSize.max,

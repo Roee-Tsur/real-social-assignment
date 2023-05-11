@@ -4,17 +4,22 @@ import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:real_social_assignment/models/user.dart';
+import 'package:real_social_assignment/screens/home/home_presenter.dart';
+import 'package:real_social_assignment/screens/home/home_view.dart';
 import 'package:real_social_assignment/services/database.dart';
+import 'package:real_social_assignment/utils/assets.dart';
+import 'package:real_social_assignment/utils/design.dart';
 
 class HomeScreen extends StatefulWidget {
   final String userId;
-  const HomeScreen(this.userId, {super.key});
+  final presenter = HomePresenter();
+  HomeScreen(this.userId, {super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> implements HomeView {
   final double defaultZoom = 10.5;
 
   Location location = Location();
@@ -30,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    widget.presenter.view = this;
     DatabaseService().listenToUser(
       userId: widget.userId,
       onUser: (user) => setState(() {
@@ -50,32 +56,31 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        shape: appBarShape,
+        actions: [
+          PopupMenuButton<MenuOption>(
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(
+                value: MenuOption.signOut,
+                child: Text("Sign Out"),
+              ),
+            ],
+            onSelected: widget.presenter.onMenuItemSelected,
+            icon: const Icon(Icons.menu),
+          )
+        ],
+      ),
       body: MapboxMap(
         accessToken:
             "pk.eyJ1Ijoicm9lZXRzdXIiLCJhIjoiY2xoaTV1Y241MDRtbDNmcGhpODR4NDloOSJ9.wL3-GnuJ63LDA9-8DYX4Ew",
         //default initial camera position is tel aviv
         initialCameraPosition: CameraPosition(
             target: const LatLng(32.075982, 34.787155), zoom: defaultZoom - 1),
-        myLocationEnabled: true,
-        onStyleLoadedCallback: () {
-          setState(() {
-            isStyleLoaded = true;
-          });
-        },
-        onMapCreated: (controller) {
-          mapController = controller;
-          if (currentLocation != null && !isCameraPositionInitialized) {
-            if (currentLocation!.latitude != null &&
-                currentLocation!.longitude != null) {
-              controller.animateCamera(CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                      zoom: defaultZoom,
-                      target: LatLng(currentLocation!.latitude!,
-                          currentLocation!.longitude!))));
-            }
-          }
-        },
+        // marking this as true makes the app crash on Navigator.pop()
+        myLocationEnabled: false,
+        onStyleLoadedCallback: onStyleLoaded,
+        onMapCreated: onMapCreated,
       ),
     );
   }
@@ -109,5 +114,37 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     });
+  }
+
+  void onMapCreated(MapboxMapController controller) {
+    setState(() {
+      mapController = controller;
+    });
+    if (currentLocation != null && !isCameraPositionInitialized) {
+      if (currentLocation!.latitude != null &&
+          currentLocation!.longitude != null) {
+        mapController!.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+                zoom: defaultZoom,
+                target: LatLng(
+                    currentLocation!.latitude!, currentLocation!.longitude!))));
+      }
+    }
+  }
+
+  void onStyleLoaded() {
+    setState(() {
+      isStyleLoaded = true;
+    });
+
+    if (mapController != null && currentLocation != null) {
+      mapController!.addSymbol(
+        SymbolOptions(
+            geometry:
+                LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+            iconImage: AssetPaths.currentLocation,
+            iconSize: 0.15),
+      );
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:real_social_assignment/utils/design.dart';
 
 import '../../widgets/rs_text_field.dart';
 import 'sign_up_presenter.dart';
@@ -16,7 +17,9 @@ class SignUpScreen extends StatelessWidget implements SignUpView {
   Widget build(BuildContext context) {
     presenter.view = this;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        shape: appBarShape,
+      ),
       body: Center(
         child: Column(
             mainAxisSize: MainAxisSize.max,
