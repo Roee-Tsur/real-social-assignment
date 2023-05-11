@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
             context: context,
             builder: (context) {
               return AddFavWidget(
-                userId: user!.id,
+                user: user!,
               );
             },
           );

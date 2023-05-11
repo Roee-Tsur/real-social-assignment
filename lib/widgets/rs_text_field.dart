@@ -5,13 +5,17 @@ class RSTextField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType? type;
   final bool isPassword;
+  final BoxConstraints? constraints;
+  final FocusNode? focusNode;
 
   const RSTextField(
       {super.key,
       required this.label,
       required this.controller,
       this.type,
-      this.isPassword = false});
+      this.isPassword = false,
+      this.constraints,
+      this.focusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +23,11 @@ class RSTextField extends StatelessWidget {
       controller: controller,
       keyboardType: type,
       obscureText: isPassword,
+      focusNode: focusNode,
       decoration: InputDecoration(
-          label: Text(label), border: const OutlineInputBorder()),
+          label: Text(label),
+          constraints: constraints,
+          border: const OutlineInputBorder()),
     );
   }
 }

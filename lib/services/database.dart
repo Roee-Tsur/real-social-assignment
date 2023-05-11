@@ -31,8 +31,8 @@ class DatabaseService {
     });
   }
 
-  void addPlace({required String userId, required Place place}) {
-    _usersCollection.doc(userId).update({
+  Future<void> addPlace({required String userId, required Place place}) async {
+    await _usersCollection.doc(userId).update({
       UserFieldNames.places:
           FieldValue.arrayUnion([Place.toFirestore(place, null)])
     });
