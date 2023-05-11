@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mapbox_search/mapbox_search.dart';
+import 'package:real_social_assignment/models/place.dart';
 
 import '../models/user.dart';
 
@@ -26,6 +28,13 @@ class DatabaseService {
       if (event.exists) {
         onUser(event.data()!);
       }
+    });
+  }
+
+  void addPlace({required String userId, required Place place}) {
+    _usersCollection.doc(userId).update({
+      UserFieldNames.places:
+          FieldValue.arrayUnion([Place.toFirestore(place, null)])
     });
   }
 }

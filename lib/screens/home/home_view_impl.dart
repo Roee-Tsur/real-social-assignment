@@ -4,10 +4,12 @@ import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:real_social_assignment/models/user.dart';
+import 'package:real_social_assignment/widgets/add_fav/add_fav_view_impl.dart';
 import 'package:real_social_assignment/screens/home/home_presenter.dart';
 import 'package:real_social_assignment/screens/home/home_view.dart';
 import 'package:real_social_assignment/services/database.dart';
 import 'package:real_social_assignment/utils/assets.dart';
+import 'package:real_social_assignment/utils/config.dart';
 import 'package:real_social_assignment/utils/design.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -72,8 +74,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
         ],
       ),
       body: MapboxMap(
-        accessToken:
-            "pk.eyJ1Ijoicm9lZXRzdXIiLCJhIjoiY2xoaTV1Y241MDRtbDNmcGhpODR4NDloOSJ9.wL3-GnuJ63LDA9-8DYX4Ew",
+        accessToken: Config.MAP_BOX_PUBLIC_API_KEY,
         //default initial camera position is tel aviv
         initialCameraPosition: CameraPosition(
             target: const LatLng(32.075982, 34.787155), zoom: defaultZoom - 1),
@@ -81,6 +82,22 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
         myLocationEnabled: false,
         onStyleLoadedCallback: onStyleLoaded,
         onMapCreated: onMapCreated,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (user == null) {
+            return;
+          }
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return AddFavWidget(
+                userId: user!.id,
+              );
+            },
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

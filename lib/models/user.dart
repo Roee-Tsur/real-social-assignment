@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:real_social_assignment/models/place.dart';
 
 class User {
   String? email;
   String? displayName;
-  List places;
+  List<Place> places;
   String id;
 
   User({required this.id, this.email, this.displayName, required this.places});
@@ -16,7 +17,12 @@ class User {
     }
     return User(
         id: snapshot.id,
-        places: data[UserFieldNames.places],
+        places: (data[UserFieldNames.places] as List)
+            .map((place) => Place(
+                name: place[PlaceFieldName.name],
+                lat: place[PlaceFieldName.lat],
+                lon: place[PlaceFieldName.lon]))
+            .toList(),
         displayName: data[UserFieldNames.displayName],
         email: data[UserFieldNames.email]);
   }
