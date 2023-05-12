@@ -8,6 +8,7 @@ import 'package:real_social_assignment/models/place.dart';
 import 'package:real_social_assignment/utils/config.dart';
 import 'package:real_social_assignment/utils/design.dart';
 import 'package:real_social_assignment/utils/map.dart';
+import 'package:real_social_assignment/utils/valodators.dart';
 import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 //this page has no presenter/model because it has not business logic, only ui logic
@@ -129,12 +130,7 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
                           label: 'Name',
                           controller: widget.nameController,
                           autoFocus: true,
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return "please enter a name";
-                            }
-                            return null;
-                          },
+                          validator: (text)=>nonEmptyValidation(text, "name"),
                         ))
                   ],
                 ),

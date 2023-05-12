@@ -1,5 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:real_social_assignment/utils/design.dart';
+import 'package:real_social_assignment/utils/valodators.dart';
 import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 import 'sign_in_presenter.dart';
@@ -30,17 +32,21 @@ class SignInScreen extends StatelessWidget implements SignInView {
                   child: const Text("Sign in with Google")),
               const Text("Or"),
               Form(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   key: formKey,
                   child: Column(
                     children: [
                       RSTextField(
                           label: "Email",
                           controller: emailController,
-                          type: TextInputType.emailAddress),
+                          type: TextInputType.emailAddress,
+                          validator: emailValidation),
                       RSTextField(
                         label: "Password",
                         controller: passwordController,
                         isPassword: true,
+                        validator: (text) =>
+                            nonEmptyValidation(text, "password"),
                       ),
                       ElevatedButton(
                           onPressed: () {
