@@ -38,12 +38,10 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
   @override
   void initState() {
     widget.presenter.view = this;
-    DatabaseService().listenToUser(
-      userId: widget.userId,
-      onUser: (user) => setState(() {
-        this.user = user;
-      }),
+    widget.presenter.startUserListener(
+      widget.userId,
     );
+
     initLocation();
     super.initState();
   }
@@ -71,14 +69,24 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
         !isSymbolsInitialized &&
         mapController != null &&
         currentLocation != null) {
-      mapController!.addSymbol(
-        SymbolOptions(
-            geometry:
-                LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            iconImage: AssetPaths.currentLocation,
-            iconSize: 0.15),
+      mapController!.addSymbols(
+        [
+          SymbolOptions(
+              geometry: LatLng(
+                  currentLocation!.latitude!, currentLocation!.longitude!),
+              iconImage: AssetPaths.currentLocation,
+              iconSize: 0.15),
+          ...user!.places
+              .map((place) => SymbolOptions(
+                  geometry: LatLng(place.lat, place.lon),
+                  iconImage: AssetPaths.currentLocation,
+                  iconSize: 0.2))
+              .toList()
+        ],
       );
-      setState(() {});
+      setState(() {
+        isSymbolsInitialized = true;
+      });
     }
 
     return Scaffold(
@@ -125,6 +133,11 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
       ),
     );
   }
+
+  @override
+  void onUser(user) => setState(() {
+        this.user = user;
+      });
 
   Future<void> initLocation() async {
     locationPermissionGranted =

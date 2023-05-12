@@ -9,8 +9,8 @@ class Place {
   Place({required this.lat, required this.lon, required this.name});
 
   Place.fromMapBox(MapBoxPlace place) {
-    lat = place.geometry!.coordinates![0];
-    lon = place.geometry!.coordinates![1];
+    lat = place.geometry!.coordinates![1];
+    lon = place.geometry!.coordinates![0];
     name = place.placeName ?? place.matchingText ?? '';
   }
 

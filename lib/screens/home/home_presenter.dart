@@ -11,6 +11,10 @@ class HomePresenter {
       _model.signOut();
     }
   }
+
+  void startUserListener(String userId) {
+    _model.setUserListener(userId: userId, onUser: view.onUser);
+  }
 }
 
 enum MenuOption { signOut }
