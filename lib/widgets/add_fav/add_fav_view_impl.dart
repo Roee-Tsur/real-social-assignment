@@ -9,6 +9,10 @@ import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 import '../../utils/config.dart';
 
+//on pop this widget should return one of these values:
+//  1. null- if no action was done
+//  2. Place- if a new place was added
+
 class AddFavWidget extends StatelessWidget implements AddFavView {
   AddFavWidget({super.key, required this.user});
 
@@ -20,7 +24,7 @@ class AddFavWidget extends StatelessWidget implements AddFavView {
     apiKey: Config.MAP_BOX_PUBLIC_API_KEY,
   );
 
-  late BuildContext context;
+  late final BuildContext context;
 
   @override
   Widget build(BuildContext context) {

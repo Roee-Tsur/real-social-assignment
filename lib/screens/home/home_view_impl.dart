@@ -12,6 +12,8 @@ import 'package:real_social_assignment/utils/assets.dart';
 import 'package:real_social_assignment/utils/config.dart';
 import 'package:real_social_assignment/utils/design.dart';
 
+import '../../models/place.dart';
+
 class HomeScreen extends StatefulWidget {
   final String userId;
   final presenter = HomePresenter();
@@ -76,12 +78,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
                   currentLocation!.latitude!, currentLocation!.longitude!),
               iconImage: AssetPaths.currentLocation,
               iconSize: 0.15),
-          ...user!.places
-              .map((place) => SymbolOptions(
-                  geometry: LatLng(place.lat, place.lon),
-                  iconImage: AssetPaths.currentLocation,
-                  iconSize: 0.2))
-              .toList()
+          ...user!.places.map((place) => getPlaceSymbol(place)).toList()
         ],
       );
       setState(() {
@@ -89,47 +86,39 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
       });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        shape: appBarShape,
-        actions: [
-          PopupMenuButton<MenuOption>(
-            itemBuilder: (BuildContext context) => [
-              const PopupMenuItem(
-                value: MenuOption.signOut,
-                child: Text("Sign Out"),
-              ),
-            ],
-            onSelected: widget.presenter.onMenuItemSelected,
-            icon: const Icon(Icons.menu),
-          )
-        ],
-      ),
-      body: MapboxMap(
-        accessToken: Config.MAP_BOX_PUBLIC_API_KEY,
-        //default initial camera position is tel aviv
-        initialCameraPosition: const CameraPosition(
-            target: LatLng(32.075982, 34.787155), zoom: Config.defaultZoom - 1),
-        // marking this as true makes the app crash on Navigator.pop()
-        myLocationEnabled: false,
-        onStyleLoadedCallback: onStyleLoaded,
-        onMapCreated: onMapCreated,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (user == null) {
-            return;
-          }
-          showModalBottomSheet(
-            context: context,
-            builder: (context) {
-              return AddFavWidget(
-                user: user!,
-              );
-            },
-          );
-        },
-        child: const Icon(Icons.add),
+    return SafeArea(
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          shape: appBarShape,
+          actions: [
+            PopupMenuButton<MenuOption>(
+              itemBuilder: (BuildContext context) => [
+                const PopupMenuItem(
+                  value: MenuOption.signOut,
+                  child: Text("Sign Out"),
+                ),
+              ],
+              onSelected: widget.presenter.onMenuItemSelected,
+              icon: const Icon(Icons.menu),
+            )
+          ],
+        ),
+        body: MapboxMap(
+          accessToken: Config.MAP_BOX_PUBLIC_API_KEY,
+          //default initial camera position is tel aviv
+          initialCameraPosition: const CameraPosition(
+              target: LatLng(32.075982, 34.787155),
+              zoom: Config.defaultZoom - 1),
+          // marking this as true makes the app crash on Navigator.pop()
+          myLocationEnabled: false,
+          onStyleLoadedCallback: onStyleLoaded,
+          onMapCreated: onMapCreated,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: onFABClick,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -176,5 +165,34 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     setState(() {
       isStyleLoaded = true;
     });
+  }
+
+  Future<void> onFABClick() async {
+    if (user == null) {
+      return;
+    }
+    final results = await showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return AddFavWidget(
+          user: user!,
+        );
+      },
+    );
+
+    if (results == null) {
+      return;
+    }
+
+    if (results is Place) {
+      mapController!.addSymbol(getPlaceSymbol(results));
+    }
+  }
+
+  SymbolOptions getPlaceSymbol(Place place) {
+    return SymbolOptions(
+        geometry: LatLng(place.lat, place.lon),
+        iconImage: AssetPaths.currentLocation,
+        iconSize: 0.2);
   }
 }
