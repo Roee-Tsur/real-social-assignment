@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 
 class Place {
@@ -12,6 +13,11 @@ class Place {
     lat = place.geometry!.coordinates![1];
     lon = place.geometry!.coordinates![0];
     name = place.placeName ?? place.matchingText ?? '';
+  }
+
+  Place.fromLatLon({required LatLng latLng, required this.name}) {
+    lat = latLng.latitude;
+    lon = latLng.longitude;
   }
 
   get shortName {

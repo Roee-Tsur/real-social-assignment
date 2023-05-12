@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mapbox_search/mapbox_search.dart';
 import 'package:real_social_assignment/models/place.dart';
 
 import '../models/user.dart';

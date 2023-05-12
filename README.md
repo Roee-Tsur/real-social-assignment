@@ -3,3 +3,5 @@
 Real Social Homework Assignment
 
 # todo
+    - create location service
+    - delete fav location

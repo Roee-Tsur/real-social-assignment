@@ -4,6 +4,7 @@ import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:real_social_assignment/models/user.dart';
+import 'package:real_social_assignment/utils/map.dart';
 import 'package:real_social_assignment/widgets/add_fav/add_fav_view_impl.dart';
 import 'package:real_social_assignment/screens/home/home_presenter.dart';
 import 'package:real_social_assignment/screens/home/home_view.dart';
@@ -57,11 +58,8 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     if (!isCameraPositionInitialized &&
         mapController != null &&
         currentLocation != null) {
-      mapController!.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(
-              zoom: Config.defaultZoom,
-              target: LatLng(
-                  currentLocation!.latitude!, currentLocation!.longitude!))));
+      mapController!.animateCamera(getCameraUpdate(
+          lat: currentLocation!.latitude!, lon: currentLocation!.longitude!));
       setState(() {
         isCameraPositionInitialized = true;
       });
@@ -73,15 +71,8 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
         currentLocation != null) {
       mapController!.addSymbols(
         [
-          SymbolOptions(
-              textField: "current location",
-              textSize: 12,
-              textOffset: symbolTextOffset,
-              geometry: LatLng(
-                  currentLocation!.latitude!, currentLocation!.longitude!),
-              iconImage: AssetPaths.currentLocation,
-              iconSize: 0.15),
-          ...user!.places.map((place) => getPlaceSymbol(place)).toList()
+          getCurrentLocationSymbol(currentLocation!),
+          ...user!.places.map((place) => getFavPlaceSymbol(place)).toList()
         ],
       );
       setState(() {
@@ -172,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
   }
 
   Future<void> onFABClick() async {
-    if (user == null) {
+    if (user == null || currentLocation == null) {
       return;
     }
     final results = await showModalBottomSheet(
@@ -180,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
       builder: (context) {
         return AddFavWidget(
           user: user!,
+          currentLocation: currentLocation!,
         );
       },
     );
@@ -189,17 +181,9 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     }
 
     if (results is Place) {
-      mapController!.addSymbol(getPlaceSymbol(results));
+      mapController!.addSymbol(getFavPlaceSymbol(results));
+      mapController!
+          .animateCamera(getCameraUpdate(lat: results.lat, lon: results.lon));
     }
-  }
-
-  SymbolOptions getPlaceSymbol(Place place) {
-    return SymbolOptions(
-        textField: place.shortName,
-        textSize: 12,
-        textOffset: symbolTextOffset,
-        geometry: LatLng(place.lat, place.lon),
-        iconImage: AssetPaths.currentLocation,
-        iconSize: 0.2);
   }
 }

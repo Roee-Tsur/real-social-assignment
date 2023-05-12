@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:real_social_assignment/models/place.dart';
 import 'package:real_social_assignment/models/user.dart';
+import 'package:real_social_assignment/screens/place_selector_screen.dart';
 import 'package:real_social_assignment/utils/design.dart';
 import 'package:real_social_assignment/widgets/add_fav/add_fav_presenter.dart';
 import 'package:real_social_assignment/widgets/add_fav/add_fav_view.dart';
@@ -14,9 +16,10 @@ import '../../utils/config.dart';
 //  2. Place- if a new place was added
 
 class AddFavWidget extends StatelessWidget implements AddFavView {
-  AddFavWidget({super.key, required this.user});
+  AddFavWidget({super.key, required this.user, required this.currentLocation});
 
   final User user;
+  final LocationData currentLocation;
 
   final presenter = AddFavPresenter();
   final placeController = TextEditingController();
@@ -48,7 +51,7 @@ class AddFavWidget extends StatelessWidget implements AddFavView {
                       return places ?? [];
                     }),
                     onSelected: ((option) => presenter.placeSelected(
-                        place: option, userId: user.id)),
+                        mapBoxPlace: option, userId: user.id)),
                     fieldViewBuilder: ((context, textEditingController,
                         focusNode, onFieldSubmitted) {
                       return RSTextField(
@@ -63,7 +66,21 @@ class AddFavWidget extends StatelessWidget implements AddFavView {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: ElevatedButton(
-                        onPressed: (() {}), child: const Text("Add from map")),
+                        onPressed: (() async {
+                          Place? place = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PlaceSelectorScreen(
+                                        currentLocation: currentLocation,
+                                      )));
+                          if (place == null) {
+                            return;
+                          }
+
+                          presenter.placeSelected(
+                              place: place, userId: user.id);
+                        }),
+                        child: const Text("Add from map")),
                   )
                 ],
               ),

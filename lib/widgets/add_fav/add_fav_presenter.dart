@@ -8,9 +8,11 @@ class AddFavPresenter {
   final _model = AddFavModel();
   late final AddFavView view;
 
-  Future<void> placeSelected({required MapBoxPlace place, required String userId}) async {
-    final newPlace = Place.fromMapBox(place);
-    await _model.addPlace(userId: userId, place: newPlace);
-    view.closeSheet(newPlace);
+  Future<void> placeSelected(
+      {Place? place, MapBoxPlace? mapBoxPlace, required String userId}) async {
+    assert(place != null || mapBoxPlace != null);
+    place ??= Place.fromMapBox(mapBoxPlace!);
+    await _model.addPlace(userId: userId, place: place);
+    view.closeSheet(place);
   }
 }
