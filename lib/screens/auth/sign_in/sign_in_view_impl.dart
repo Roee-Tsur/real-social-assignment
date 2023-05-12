@@ -4,7 +4,7 @@ import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 import 'sign_in_presenter.dart';
 import 'sign_in_view.dart';
-import 'sign_up_view_impl.dart';
+import '../sign_up/sign_up_view_impl.dart';
 
 class SignInScreen extends StatelessWidget implements SignInView {
   SignInScreen({super.key});

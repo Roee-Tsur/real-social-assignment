@@ -8,8 +8,6 @@ import 'package:real_social_assignment/utils/map.dart';
 import 'package:real_social_assignment/widgets/add_fav/add_fav_view_impl.dart';
 import 'package:real_social_assignment/screens/home/home_presenter.dart';
 import 'package:real_social_assignment/screens/home/home_view.dart';
-import 'package:real_social_assignment/services/database.dart';
-import 'package:real_social_assignment/utils/assets.dart';
 import 'package:real_social_assignment/utils/config.dart';
 import 'package:real_social_assignment/utils/design.dart';
 

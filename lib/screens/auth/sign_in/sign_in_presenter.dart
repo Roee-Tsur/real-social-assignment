@@ -1,6 +1,6 @@
-import 'package:real_social_assignment/screens/auth/sign_in_view.dart';
+import 'package:real_social_assignment/screens/auth/sign_in/sign_in_view.dart';
 
-import 'auth_model.dart';
+import '../auth_model.dart';
 
 class SignInPresenter {
   late SignInView view;

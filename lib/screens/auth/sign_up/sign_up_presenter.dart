@@ -1,4 +1,4 @@
-import 'auth_model.dart';
+import '../auth_model.dart';
 import 'sign_up_view.dart';
 
 class SignUpPresenter {
