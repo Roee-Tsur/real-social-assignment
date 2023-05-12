@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:real_social_assignment/utils/design.dart';
 
-import '../../../utils/valodators.dart';
+import '../../../utils/validators.dart';
 import '../../../widgets/rs_text_field.dart';
 import 'sign_up_presenter.dart';
 import 'sign_up_view.dart';

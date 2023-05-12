@@ -8,7 +8,7 @@ import 'package:real_social_assignment/models/place.dart';
 import 'package:real_social_assignment/utils/config.dart';
 import 'package:real_social_assignment/utils/design.dart';
 import 'package:real_social_assignment/utils/map.dart';
-import 'package:real_social_assignment/utils/valodators.dart';
+import 'package:real_social_assignment/utils/validators.dart';
 import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 //this page has no presenter/model because it has not business logic, only ui logic
