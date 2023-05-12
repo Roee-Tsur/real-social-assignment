@@ -7,3 +7,5 @@ const appBarShape = RoundedRectangleBorder(
 
 const bottomSheetShape = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(16)));
+
+const symbolTextOffset = Offset(0, -1.5);

@@ -14,6 +14,15 @@ class Place {
     name = place.placeName ?? place.matchingText ?? '';
   }
 
+  get shortName {
+    String newName = name;
+    if (name.length > 15) {
+      newName = newName.substring(0, 15);
+      newName += "...";
+    }
+    return newName;
+  }
+
   static Place fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
       SnapshotOptions? options) {
     final data = snapshot.data();

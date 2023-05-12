@@ -74,6 +74,9 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
       mapController!.addSymbols(
         [
           SymbolOptions(
+              textField: "current location",
+              textSize: 12,
+              textOffset: symbolTextOffset,
               geometry: LatLng(
                   currentLocation!.latitude!, currentLocation!.longitude!),
               iconImage: AssetPaths.currentLocation,
@@ -192,6 +195,9 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
 
   SymbolOptions getPlaceSymbol(Place place) {
     return SymbolOptions(
+        textField: place.shortName,
+        textSize: 12,
+        textOffset: symbolTextOffset,
         geometry: LatLng(place.lat, place.lon),
         iconImage: AssetPaths.currentLocation,
         iconSize: 0.2);
