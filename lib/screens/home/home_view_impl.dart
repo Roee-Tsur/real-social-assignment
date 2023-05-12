@@ -89,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           shape: appBarShape,
           actions: [
