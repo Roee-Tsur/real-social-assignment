@@ -6,8 +6,8 @@ import 'package:real_social_assignment/models/user.dart';
 import 'package:real_social_assignment/screens/place_selector_screen.dart';
 import 'package:real_social_assignment/utils/colors.dart';
 import 'package:real_social_assignment/utils/design.dart';
-import 'package:real_social_assignment/widgets/add_fav/add_fav_presenter.dart';
-import 'package:real_social_assignment/widgets/add_fav/add_fav_view.dart';
+import 'package:real_social_assignment/widgets/places_list/places_list_presenter.dart';
+import 'package:real_social_assignment/widgets/places_list/places_list_view.dart';
 import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 import '../../utils/config.dart';
@@ -16,13 +16,14 @@ import '../../utils/config.dart';
 //  1. null- if no action was done
 //  2. Place- if a new place was added
 
-class AddFavWidget extends StatelessWidget implements AddFavView {
-  AddFavWidget({super.key, required this.user, required this.currentLocation});
+class PlacesListWidget extends StatelessWidget implements PlacesListView {
+  PlacesListWidget(
+      {super.key, required this.user, required this.currentLocation});
 
   final User user;
   final LocationData currentLocation;
 
-  final presenter = AddFavPresenter();
+  final presenter = PlacesListPresenter();
   final placeController = TextEditingController();
   final placeSearch = PlacesSearch(
     apiKey: Config.MAP_BOX_PUBLIC_API_KEY,

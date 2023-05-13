@@ -5,7 +5,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:real_social_assignment/models/user.dart';
 import 'package:real_social_assignment/utils/colors.dart';
 import 'package:real_social_assignment/utils/map.dart';
-import 'package:real_social_assignment/widgets/add_fav/add_fav_view_impl.dart';
+import 'package:real_social_assignment/widgets/places_list/places_list_view_impl.dart';
 import 'package:real_social_assignment/screens/home/home_presenter.dart';
 import 'package:real_social_assignment/screens/home/home_view.dart';
 import 'package:real_social_assignment/utils/config.dart';
@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     final results = await showModalBottomSheet(
       context: context,
       builder: (context) {
-        return AddFavWidget(
+        return PlacesListWidget(
           user: user!,
           currentLocation: currentLocation!,
         );

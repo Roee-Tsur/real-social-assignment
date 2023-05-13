@@ -1,12 +1,12 @@
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:real_social_assignment/models/place.dart';
-import 'package:real_social_assignment/widgets/add_fav/add_fav_model.dart';
+import 'package:real_social_assignment/widgets/places_list/places_list_model.dart';
 
-import 'add_fav_view.dart';
+import 'places_list_view.dart';
 
-class AddFavPresenter {
-  final _model = AddFavModel();
-  late final AddFavView view;
+class PlacesListPresenter {
+  final _model = PlacesListModel();
+  late final PlacesListView view;
 
   Future<void> placeSelected(
       {Place? place, MapBoxPlace? mapBoxPlace, required String userId}) async {
