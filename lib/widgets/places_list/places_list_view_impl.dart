@@ -38,87 +38,96 @@ class PlacesListWidget extends StatelessWidget implements PlacesListView {
 
     return DraggableScrollableSheet(
         initialChildSize: 1,
-        builder: ((context, scrollController) =>
-            Column(mainAxisSize: MainAxisSize.min, children: [
-              const SizedBox(
-                height: globalPadding,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Autocomplete<MapBoxPlace>(
-                    optionsBuilder: ((textEditingValue) async {
-                      final places =
-                          await placeSearch.getPlaces(textEditingValue.text);
-                      return places ?? [];
-                    }),
-                    onSelected: ((option) => presenter.placeSelected(
-                        mapBoxPlace: option, userId: user.id)),
-                    fieldViewBuilder: ((context, textEditingController,
-                        focusNode, onFieldSubmitted) {
-                      return RSTextField(
-                          controller: textEditingController,
-                          focusNode: focusNode,
-                          label: "Search",
-                          suffixIcon: const Icon(Icons.search),
-                          constraints: BoxConstraints(
-                              maxWidth:
-                                  MediaQuery.of(context).size.width * 0.4));
-                    }),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: ButtonContainer(
-                      child: ElevatedButton(
-                          style: const ButtonStyle(
-                              shape: MaterialStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: uiBorderRadius)),
-                              backgroundColor:
-                                  MaterialStatePropertyAll(mainColor)),
-                          onPressed: (() async {
-                            Place? place = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PlaceSelectorScreen(
-                                          currentLocation: currentLocation,
-                                        )));
-                            if (place == null) {
-                              return;
-                            }
-
-                            presenter.placeSelected(
-                                place: place, userId: user.id);
-                          }),
-                          child: const Text("Add from map")),
+        builder: ((context, scrollController) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: globalPadding),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                const SizedBox(
+                  height: globalPadding,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: Autocomplete<MapBoxPlace>(
+                        optionsBuilder: ((textEditingValue) async {
+                          final places = await placeSearch
+                              .getPlaces(textEditingValue.text);
+                          return places ?? [];
+                        }),
+                        onSelected: ((option) => presenter.placeSelected(
+                            mapBoxPlace: option, userId: user.id)),
+                        fieldViewBuilder: ((context, textEditingController,
+                            focusNode, onFieldSubmitted) {
+                          return RSTextField(
+                              controller: textEditingController,
+                              focusNode: focusNode,
+                              label: "Search",
+                              suffixIcon: const Icon(Icons.search, size: 32),
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.4));
+                        }),
+                      ),
                     ),
-                  )
-                ],
-              ),
-              const Divider(
-                  color: Colors.black,
-                  thickness: 1,
-                  endIndent: globalPadding,
-                  indent: globalPadding),
-              Expanded(
-                child: ListView.separated(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(user.places[index].name),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        color: Colors.black,
-                        thickness: 1,
-                        endIndent: 30,
-                        indent: 30,
-                      );
-                    },
-                    itemCount: user.places.length),
-              )
-            ])));
+                    const SizedBox(
+                      width: globalPadding,
+                    ),
+                    Expanded(
+                      child: ButtonContainer(
+                        child: ElevatedButton(
+                            style: const ButtonStyle(
+                                shape: MaterialStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                        borderRadius: uiBorderRadius)),
+                                backgroundColor:
+                                    MaterialStatePropertyAll(mainColor)),
+                            onPressed: (() async {
+                              Place? place = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PlaceSelectorScreen(
+                                            currentLocation: currentLocation,
+                                          )));
+                              if (place == null) {
+                                return;
+                              }
+                              presenter.placeSelected(
+                                  place: place, userId: user.id);
+                            }),
+                            child: const Text(
+                              "Add from map",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Divider(
+                      color: Colors.black,
+                      thickness: 1.4,
+                      endIndent: globalPadding,
+                      indent: globalPadding),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          margin: index == user.places.length - 1
+                              ? const EdgeInsets.only(bottom: 150)
+                              : null,
+                          child: ListTile(
+                            title: Text(user.places[index].name),
+                          ),
+                        );
+                      },
+                      itemCount: user.places.length),
+                )
+              ]),
+            )));
   }
 
   @override
