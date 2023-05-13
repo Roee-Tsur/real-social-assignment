@@ -6,4 +6,8 @@ class PlacesListModel {
   Future<void> addPlace({required String userId, required Place place}) {
     return DatabaseService().addPlace(userId: userId, place: place);
   }
+
+  Future<void> deletePlace({required String userId, required Place place}) {
+    return DatabaseService().deletePlace(userId: userId, place: place);
+  }
 }

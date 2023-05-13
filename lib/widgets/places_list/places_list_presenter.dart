@@ -13,6 +13,12 @@ class PlacesListPresenter {
     assert(place != null || mapBoxPlace != null);
     place ??= Place.fromMapBox(mapBoxPlace!);
     await _model.addPlace(userId: userId, place: place);
-    view.closeSheet(place);
+    view.placeAdded(place);
+  }
+
+  Future<void> deletePlaceClicked(
+      {required String userId, required Place place}) async {
+    await _model.deletePlace(userId: userId, place: place);
+    view.placeRemoved(place);
   }
 }

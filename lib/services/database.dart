@@ -36,4 +36,11 @@ class DatabaseService {
           FieldValue.arrayUnion([Place.toFirestore(place, null)])
     });
   }
+
+  Future<void> deletePlace({required String userId, required Place place}) async {
+    await _usersCollection.doc(userId).update({
+      UserFieldNames.places:
+          FieldValue.arrayRemove([Place.toFirestore(place, null)])
+    });
+  }
 }

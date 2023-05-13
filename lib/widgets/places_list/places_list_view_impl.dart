@@ -12,30 +12,38 @@ import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 import '../../utils/config.dart';
 
-//on pop this widget should return one of these values:
-//  1. null- if no action was done
-//  2. Place- if a new place was added
-
-class PlacesListWidget extends StatelessWidget implements PlacesListView {
-  PlacesListWidget(
-      {super.key, required this.user, required this.currentLocation});
+class PlacesListWidget extends StatefulWidget {
+  const PlacesListWidget(
+      {super.key,
+      required this.user,
+      required this.currentLocation,
+      required this.onPlaceAdded,
+      required this.onPlaceRemoved});
 
   final User user;
   final LocationData currentLocation;
+  final void Function(Place) onPlaceAdded, onPlaceRemoved;
 
+  @override
+  State<PlacesListWidget> createState() => _PlacesListWidgetState();
+}
+
+class _PlacesListWidgetState extends State<PlacesListWidget>
+    implements PlacesListView {
   final presenter = PlacesListPresenter();
   final placeController = TextEditingController();
   final placeSearch = PlacesSearch(
     apiKey: Config.MAP_BOX_PUBLIC_API_KEY,
   );
 
-  late final BuildContext context;
+  @override
+  void initState() {
+    presenter.view = this;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    presenter.view = this;
-    this.context = context;
-
     return DraggableScrollableSheet(
         initialChildSize: 1,
         builder: ((context, scrollController) => Padding(
@@ -55,7 +63,7 @@ class PlacesListWidget extends StatelessWidget implements PlacesListView {
                           return places ?? [];
                         }),
                         onSelected: ((option) => presenter.placeSelected(
-                            mapBoxPlace: option, userId: user.id)),
+                            mapBoxPlace: option, userId: widget.user.id)),
                         fieldViewBuilder: ((context, textEditingController,
                             focusNode, onFieldSubmitted) {
                           return RSTextField(
@@ -86,13 +94,14 @@ class PlacesListWidget extends StatelessWidget implements PlacesListView {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => PlaceSelectorScreen(
-                                            currentLocation: currentLocation,
+                                            currentLocation:
+                                                widget.currentLocation,
                                           )));
                               if (place == null) {
                                 return;
                               }
                               presenter.placeSelected(
-                                  place: place, userId: user.id);
+                                  place: place, userId: widget.user.id);
                             }),
                             child: const Text(
                               "Add from map",
@@ -115,23 +124,38 @@ class PlacesListWidget extends StatelessWidget implements PlacesListView {
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
+                        final place = widget.user.places[index];
                         return Card(
-                          margin: index == user.places.length - 1
+                          margin: index == widget.user.places.length - 1
                               ? const EdgeInsets.only(bottom: 150)
                               : null,
                           child: ListTile(
-                            title: Text(user.places[index].name),
+                            title: Text(place.name),
+                            trailing: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    widget.user.places.remove(place);
+                                  });
+                                  presenter.deletePlaceClicked(
+                                      place: place, userId: widget.user.id);
+                                },
+                                icon: const Icon(Icons.delete)),
                           ),
                         );
                       },
-                      itemCount: user.places.length),
+                      itemCount: widget.user.places.length),
                 )
               ]),
             )));
   }
 
   @override
-  void closeSheet(Place newPlace) {
-    Navigator.pop(context, newPlace);
+  void placeAdded(Place place) {
+    widget.onPlaceAdded(place);
+  }
+
+  @override
+  void placeRemoved(Place place) {
+    widget.onPlaceRemoved(place);
   }
 }

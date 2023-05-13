@@ -11,8 +11,6 @@ import 'package:real_social_assignment/screens/home/home_view.dart';
 import 'package:real_social_assignment/utils/config.dart';
 import 'package:real_social_assignment/utils/design.dart';
 
-import '../../models/place.dart';
-
 class HomeScreen extends StatefulWidget {
   final String userId;
   final presenter = HomePresenter();
@@ -173,25 +171,25 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     if (user == null || currentLocation == null) {
       return;
     }
-    final results = await showModalBottomSheet(
+    showModalBottomSheet(
       context: context,
       builder: (context) {
         return PlacesListWidget(
           user: user!,
           currentLocation: currentLocation!,
+          onPlaceAdded: (place) {
+            mapController!.addSymbol(getFavPlaceSymbol(place));
+            mapController!
+                .animateCamera(getCameraUpdate(lat: place.lat, lon: place.lon));
+          },
+          onPlaceRemoved: (place) {
+            final symbol = mapController!.symbols.firstWhere(
+                (element) => element.options.geometry == getFavPlaceSymbol(place).geometry);
+            mapController!.removeSymbol(symbol);
+          },
         );
       },
     );
-
-    if (results == null) {
-      return;
-    }
-
-    if (results is Place) {
-      mapController!.addSymbol(getFavPlaceSymbol(results));
-      mapController!
-          .animateCamera(getCameraUpdate(lat: results.lat, lon: results.lon));
-    }
   }
 
   @override
