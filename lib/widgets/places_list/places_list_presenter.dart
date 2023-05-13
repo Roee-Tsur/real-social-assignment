@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:real_social_assignment/models/place.dart';
 import 'package:real_social_assignment/widgets/places_list/places_list_model.dart';
@@ -20,5 +23,11 @@ class PlacesListPresenter {
       {required String userId, required Place place}) async {
     await _model.deletePlace(userId: userId, place: place);
     view.placeRemoved(place);
+  }
+
+  Future<Iterable<MapBoxPlace>> placesSearchOptionsBuilder(
+      TextEditingValue textEditingValue) async {
+    final places = await _model.getPlaces(textEditingValue.text);
+    return places ?? [];
   }
 }

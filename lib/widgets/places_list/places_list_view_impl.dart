@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_search/mapbox_search.dart';
@@ -32,9 +34,6 @@ class _PlacesListWidgetState extends State<PlacesListWidget>
     implements PlacesListView {
   final presenter = PlacesListPresenter();
   final placeController = TextEditingController();
-  final placeSearch = PlacesSearch(
-    apiKey: Config.MAP_BOX_PUBLIC_API_KEY,
-  );
 
   @override
   void initState() {
@@ -57,11 +56,7 @@ class _PlacesListWidgetState extends State<PlacesListWidget>
                   children: [
                     Expanded(
                       child: Autocomplete<MapBoxPlace>(
-                        optionsBuilder: ((textEditingValue) async {
-                          final places = await placeSearch
-                              .getPlaces(textEditingValue.text);
-                          return places ?? [];
-                        }),
+                        optionsBuilder: presenter.placesSearchOptionsBuilder,
                         onSelected: ((option) => presenter.placeSelected(
                             mapBoxPlace: option, userId: widget.user.id)),
                         fieldViewBuilder: ((context, textEditingController,
