@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:real_social_assignment/models/user.dart';
 import 'package:real_social_assignment/utils/colors.dart';
 import 'package:real_social_assignment/utils/map.dart';
@@ -24,11 +23,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> implements HomeView {
-  Location location = Location();
   LocationData? currentLocation;
 
-  bool serviceEnabled = false;
-  bool locationPermissionGranted = false;
+  bool? serviceEnabled;
+  PermissionStatus? locationPermission;
   bool isStyleLoaded = false;
   MapboxMapController? mapController;
 
@@ -44,14 +42,44 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
       widget.userId,
     );
 
-    initLocation();
+    widget.presenter.initLocation();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!locationPermissionGranted || !serviceEnabled) {
+    if (locationPermission == null || serviceEnabled == null) {
       return const Scaffold();
+    }
+
+    if (!serviceEnabled!) {
+      return const Scaffold(
+        body: Center(
+            child: Text(
+          "Your location service is disabled!\nEnable location services and restart the app",
+          textAlign: TextAlign.center,
+        )),
+      );
+    }
+
+    if (locationPermission == PermissionStatus.deniedForever) {
+      return const Scaffold(
+          body: Center(
+              child: Text(
+                  "You need to give the app location permission for it to work\nfind the app in your settings to give the app permission",
+                  textAlign: TextAlign.center)));
+    }
+
+    if (locationPermission == PermissionStatus.denied) {
+      return Scaffold(
+        body: InkWell(
+            onTap: widget.presenter.requestLocationPermission,
+            child: const Center(
+                child: Text(
+              "You need to give the app location permission for it to work\nclick anywhere to give the app permission",
+              textAlign: TextAlign.center,
+            ))),
+      );
     }
 
     if (!isCameraPositionInitialized &&
@@ -125,29 +153,6 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
         this.user = user;
       });
 
-  Future<void> initLocation() async {
-    locationPermissionGranted =
-        await Permission.locationWhenInUse.request().isGranted;
-    if (!locationPermissionGranted) {
-      Fluttertoast.showToast(msg: 'No location permission');
-      return;
-    }
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        Fluttertoast.showToast(msg: "No location service");
-        return;
-      }
-    }
-    location.getLocation().then((value) {
-      setState(() {
-        currentLocation = value;
-      });
-    });
-  }
-
   void onMapCreated(MapboxMapController controller) {
     setState(() {
       mapController = controller;
@@ -187,5 +192,26 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
       mapController!
           .animateCamera(getCameraUpdate(lat: results.lat, lon: results.lon));
     }
+  }
+
+  @override
+  void locationPermissionDenied() {
+    Fluttertoast.showToast(msg: 'No location permission');
+  }
+
+  @override
+  void updateCurrentLocation(LocationData value) {
+    setState(() {
+      currentLocation = value;
+    });
+  }
+
+  @override
+  void updateServiceAndPermissionStatus(
+      bool serviceEnabled, PermissionStatus locationPermission) {
+    setState(() {
+      this.serviceEnabled = serviceEnabled;
+      this.locationPermission = locationPermission;
+    });
   }
 }

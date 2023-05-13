@@ -39,7 +39,6 @@ dependencies:
   fluttertoast: ^8.2.1
   cloud_firestore: ^4.6.0
   mapbox_gl: ^0.16.0
-  permission_handler: ^10.2.0
   location: ^4.4.0
   mapbox_search: ^3.2.0
   email_validator: ^2.1.17
