@@ -4,6 +4,7 @@ import 'package:mapbox_search/mapbox_search.dart';
 import 'package:real_social_assignment/models/place.dart';
 import 'package:real_social_assignment/models/user.dart';
 import 'package:real_social_assignment/screens/place_selector_screen.dart';
+import 'package:real_social_assignment/utils/colors.dart';
 import 'package:real_social_assignment/utils/design.dart';
 import 'package:real_social_assignment/widgets/add_fav/add_fav_presenter.dart';
 import 'package:real_social_assignment/widgets/add_fav/add_fav_view.dart';
@@ -58,6 +59,7 @@ class AddFavWidget extends StatelessWidget implements AddFavView {
                           controller: textEditingController,
                           focusNode: focusNode,
                           label: "Search",
+                          suffixIcon: const Icon(Icons.search),
                           constraints: BoxConstraints(
                               maxWidth:
                                   MediaQuery.of(context).size.width * 0.4));
@@ -65,22 +67,30 @@ class AddFavWidget extends StatelessWidget implements AddFavView {
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.4,
-                    child: ElevatedButton(
-                        onPressed: (() async {
-                          Place? place = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PlaceSelectorScreen(
-                                        currentLocation: currentLocation,
-                                      )));
-                          if (place == null) {
-                            return;
-                          }
+                    child: ButtonContainer(
+                      child: ElevatedButton(
+                          style: const ButtonStyle(
+                              shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: uiBorderRadius)),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(mainColor)),
+                          onPressed: (() async {
+                            Place? place = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PlaceSelectorScreen(
+                                          currentLocation: currentLocation,
+                                        )));
+                            if (place == null) {
+                              return;
+                            }
 
-                          presenter.placeSelected(
-                              place: place, userId: user.id);
-                        }),
-                        child: const Text("Add from map")),
+                            presenter.placeSelected(
+                                place: place, userId: user.id);
+                          }),
+                          child: const Text("Add from map")),
+                    ),
                   )
                 ],
               ),

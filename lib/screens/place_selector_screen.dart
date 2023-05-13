@@ -11,6 +11,8 @@ import 'package:real_social_assignment/utils/map.dart';
 import 'package:real_social_assignment/utils/validators.dart';
 import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
+import '../utils/colors.dart';
+
 //this page has no presenter/model because it has not business logic, only ui logic
 //on pop should return Place or null
 class PlaceSelectorScreen extends StatefulWidget {
@@ -45,31 +47,37 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
       }
     }
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(shape: appBarShape),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: selectedLocation == null ? Colors.grey : null,
-          onPressed: onFabClick,
-          child: const Icon(Icons.done)),
-      body: MapboxMap(
-          accessToken: Config.MAP_BOX_PUBLIC_API_KEY,
-          initialCameraPosition: CameraPosition(
-              zoom: Config.defaultZoom,
-              target: LatLng(widget.currentLocation.latitude!,
-                  widget.currentLocation.longitude!)),
-          onStyleLoadedCallback: () {
-            setState(() {
-              isStyleLoaded = true;
-            });
-          },
-          onMapCreated: (controller) {
-            setState(() {
-              mapController = controller;
-            });
-          },
-          onMapLongClick: onLongClick),
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          shape: appBarShape,
+          backgroundColor: mainColor,
+          iconTheme: const IconThemeData(color: Colors.black),
+        ),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: selectedLocation == null ? Colors.grey : null,
+            onPressed: onFabClick,
+            child: const Icon(Icons.done)),
+        body: MapboxMap(
+            accessToken: Config.MAP_BOX_PUBLIC_API_KEY,
+            initialCameraPosition: CameraPosition(
+                zoom: Config.defaultZoom,
+                target: LatLng(widget.currentLocation.latitude!,
+                    widget.currentLocation.longitude!)),
+            onStyleLoadedCallback: () {
+              setState(() {
+                isStyleLoaded = true;
+              });
+            },
+            onMapCreated: (controller) {
+              setState(() {
+                mapController = controller;
+              });
+            },
+            onMapLongClick: onLongClick),
+      ),
     );
   }
 
@@ -130,11 +138,12 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
                           label: 'Name',
                           controller: widget.nameController,
                           autoFocus: true,
-                          validator: (text)=>nonEmptyValidation(text, "name"),
+                          validator: (text) => nonEmptyValidation(text, "name"),
                         ))
                   ],
                 ),
                 FloatingActionButton(
+                  backgroundColor: mainColor,
                   onPressed: () {
                     if (widget.formKey.currentState != null &&
                         widget.formKey.currentState!.validate()) {

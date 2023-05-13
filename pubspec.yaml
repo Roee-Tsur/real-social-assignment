@@ -60,4 +60,6 @@ flutter:
 
   assets:
    - assets/current_location.png
+   - assets/marker.png
+   - assets/select_marker.png
 

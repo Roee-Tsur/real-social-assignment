@@ -1,7 +1,7 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:real_social_assignment/utils/colors.dart';
 import 'package:real_social_assignment/utils/design.dart';
-import 'package:real_social_assignment/utils/valodators.dart';
+import 'package:real_social_assignment/utils/validators.dart';
 import 'package:real_social_assignment/widgets/rs_text_field.dart';
 
 import 'sign_in_presenter.dart';
@@ -19,56 +19,85 @@ class SignInScreen extends StatelessWidget implements SignInView {
   @override
   Widget build(BuildContext context) {
     presenter.view = this;
-    return Scaffold(
-      appBar: AppBar(shape: appBarShape),
-      body: Center(
-        child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: presenter.signInWithGoogleClicked,
-                  child: const Text("Sign in with Google")),
-              const Text("Or"),
-              Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      RSTextField(
-                          label: "Email",
-                          controller: emailController,
-                          type: TextInputType.emailAddress,
-                          validator: emailValidation),
-                      RSTextField(
-                        label: "Password",
-                        controller: passwordController,
-                        isPassword: true,
-                        validator: (text) =>
-                            nonEmptyValidation(text, "password"),
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          heightFactor: 1.5,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6),
+            child: Form(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              key: formKey,
+              child: AuthCard(
+                children: [
+                  ButtonContainer(
+                    child: OutlinedButton(
+                      style: const ButtonStyle(
+                          shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius: uiBorderRadius))),
+                      onPressed: presenter.signInWithGoogleClicked,
+                      child: const Text(
+                        "Sign in with Google",
+                        style: TextStyle(color: mainColor),
                       ),
-                      ElevatedButton(
-                          onPressed: () {
-                            if (formKey.currentState != null &&
-                                formKey.currentState!.validate()) {
-                              FocusScope.of(context).unfocus();
-
-                              presenter.signInWithEmailClicked(
-                                  email: emailController.text,
-                                  password: passwordController.text);
-                            }
-                          },
-                          child: const Text("Login"))
-                    ],
-                  )),
-              TextButton(
-                  onPressed: (() => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpScreen()),
-                      )),
-                  child: const Text("Sign up"))
-            ]),
+                    ),
+                  ),
+                  const Text(
+                    "Or",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  RSTextField(
+                      label: "Email",
+                      controller: emailController,
+                      type: TextInputType.emailAddress,
+                      validator: emailValidation),
+                  RSTextField(
+                    label: "Password",
+                    controller: passwordController,
+                    isPassword: true,
+                    validator: (text) => nonEmptyValidation(text, "password"),
+                  ),
+                  //empty container to make space between text fields and login button
+                  Container(),
+                  ButtonContainer(
+                    child: ElevatedButton(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(mainColor),
+                            shape: MaterialStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: uiBorderRadius))),
+                        onPressed: () {
+                          if (formKey.currentState != null &&
+                              formKey.currentState!.validate()) {
+                            FocusScope.of(context).unfocus();
+                            presenter.signInWithEmailClicked(
+                                email: emailController.text,
+                                password: passwordController.text);
+                          }
+                        },
+                        child: const Text("Login")),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                      onPressed: (() => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUpScreen()),
+                          )),
+                      child: const Text(
+                        "Sign up",
+                        style: TextStyle(color: mainColor),
+                      ))
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

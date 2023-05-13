@@ -4,6 +4,7 @@ import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:real_social_assignment/models/user.dart';
+import 'package:real_social_assignment/utils/colors.dart';
 import 'package:real_social_assignment/utils/map.dart';
 import 'package:real_social_assignment/widgets/add_fav/add_fav_view_impl.dart';
 import 'package:real_social_assignment/screens/home/home_presenter.dart';
@@ -84,6 +85,8 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           shape: appBarShape,
+          iconTheme: const IconThemeData(color: Colors.black),
+          backgroundColor: mainColor,
           actions: [
             PopupMenuButton<MenuOption>(
               itemBuilder: (BuildContext context) => [
@@ -109,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
           onMapCreated: onMapCreated,
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: mainColor,
           onPressed: onFABClick,
           child: const Icon(Icons.add),
         ),
