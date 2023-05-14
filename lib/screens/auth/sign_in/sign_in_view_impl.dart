@@ -39,7 +39,7 @@ class SignInScreen extends StatelessWidget implements SignInView {
                       onPressed: presenter.signInWithGoogleClicked,
                       child: const Text(
                         "Sign in with Google",
-                        style: TextStyle(color: mainColor),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ),
@@ -77,7 +77,7 @@ class SignInScreen extends StatelessWidget implements SignInView {
                                 password: passwordController.text);
                           }
                         },
-                        child: const Text("Login")),
+                        child: const Text("Login", style: TextStyle(fontSize: 16),)),
                   ),
                   const SizedBox(
                     height: 20,

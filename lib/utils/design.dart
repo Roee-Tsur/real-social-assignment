@@ -4,6 +4,7 @@ import 'colors.dart';
 
 const globalPadding = 16.0;
 const buttonHeight = 46.0;
+const fabIconSize = 40.0;
 
 const appBarShape = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)));

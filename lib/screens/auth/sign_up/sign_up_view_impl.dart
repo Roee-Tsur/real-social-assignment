@@ -42,7 +42,7 @@ class SignUpScreen extends StatelessWidget implements SignUpView {
                                 .then((value) =>
                                     value ? Navigator.pop(context) : null),
                             child: const Text("Sign up with Google",
-                                style: TextStyle(color: mainColor))),
+                                style: TextStyle(color: Colors.black))),
                       ),
                       const Text(
                         "Or",
@@ -82,7 +82,8 @@ class SignUpScreen extends StatelessWidget implements SignUpView {
                                         value ? Navigator.pop(context) : null);
                               }
                             },
-                            child: const Text("Sign up")),
+                            child: const Text("Sign up",
+                                style: TextStyle(fontSize: 16))),
                       ),
                     ],
                   ),

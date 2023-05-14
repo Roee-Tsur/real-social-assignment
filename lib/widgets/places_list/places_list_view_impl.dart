@@ -110,10 +110,9 @@ class _PlacesListWidgetState extends State<PlacesListWidget>
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Divider(
-                      color: Colors.black,
-                      thickness: 1.4,
-                      endIndent: globalPadding,
-                      indent: globalPadding),
+                    color: Colors.black,
+                    thickness: 1.4,
+                  ),
                 ),
                 Expanded(
                   child: ListView.builder(

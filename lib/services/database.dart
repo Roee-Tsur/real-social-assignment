@@ -25,7 +25,7 @@ class DatabaseService {
   void listenToUser(
       {required String userId, required void Function(User) onUser}) {
     _usersCollection.doc(userId).snapshots().listen((event) {
-      if (event.exists) {
+      if (event.data() != null) {
         onUser(event.data()!);
       }
     });

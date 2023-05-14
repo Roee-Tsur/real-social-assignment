@@ -60,7 +60,10 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
         floatingActionButton: FloatingActionButton(
             backgroundColor: selectedLocation == null ? Colors.grey : null,
             onPressed: onFabClick,
-            child: const Icon(Icons.done)),
+            child: const Icon(
+              Icons.done,
+              size: fabIconSize,
+            )),
         body: MapboxMap(
             accessToken: Config.MAP_BOX_PUBLIC_API_KEY,
             initialCameraPosition: CameraPosition(
@@ -151,7 +154,7 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
                       Navigator.pop(context, nameController.text);
                     }
                   },
-                  child: const Icon(Icons.done),
+                  child: const Icon(Icons.done, size: fabIconSize),
                 )
               ],
             ),

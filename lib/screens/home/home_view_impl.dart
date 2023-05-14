@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
         floatingActionButton: FloatingActionButton(
           backgroundColor: mainColor,
           onPressed: onFABClick,
-          child: const Icon(Icons.add),
+          child: const Icon(Icons.add, size: fabIconSize),
         ),
       ),
     );
@@ -170,6 +170,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
 
   Future<void> onFABClick() async {
     if (user == null || currentLocation == null) {
+      Fluttertoast.showToast(msg: "App Still initializing");
       return;
     }
     showModalBottomSheet(
