@@ -16,11 +16,9 @@ import '../utils/colors.dart';
 //this page has no presenter/model because it has not business logic, only ui logic
 //on pop should return Place or null
 class PlaceSelectorScreen extends StatefulWidget {
-  PlaceSelectorScreen({super.key, required this.currentLocation});
+  const PlaceSelectorScreen({super.key, required this.currentLocation});
 
   final LocationData currentLocation;
-  final nameController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
 
   @override
   State<PlaceSelectorScreen> createState() => _PlaceSelectorScreenState();
@@ -30,6 +28,9 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
   bool isStyleLoaded = false;
   MapboxMapController? mapController;
   LatLng? selectedLocation;
+
+  final nameController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +120,7 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
         child: Padding(
           padding: const EdgeInsets.all(globalPadding),
           child: Form(
-            key: widget.formKey,
+            key: formKey,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.min,
@@ -136,7 +137,7 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: RSTextField(
                           label: 'Name',
-                          controller: widget.nameController,
+                          controller: nameController,
                           autoFocus: true,
                           validator: (text) => nonEmptyValidation(text, "name"),
                         ))
@@ -145,9 +146,9 @@ class _PlaceSelectorScreenState extends State<PlaceSelectorScreen> {
                 FloatingActionButton(
                   backgroundColor: mainColor,
                   onPressed: () {
-                    if (widget.formKey.currentState != null &&
-                        widget.formKey.currentState!.validate()) {
-                      Navigator.pop(context, widget.nameController.text);
+                    if (formKey.currentState != null &&
+                        formKey.currentState!.validate()) {
+                      Navigator.pop(context, nameController.text);
                     }
                   },
                   child: const Icon(Icons.done),

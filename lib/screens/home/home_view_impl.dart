@@ -13,8 +13,7 @@ import 'package:real_social_assignment/utils/design.dart';
 
 class HomeScreen extends StatefulWidget {
   final String userId;
-  final presenter = HomePresenter();
-  HomeScreen(this.userId, {super.key});
+  const HomeScreen(this.userId, {super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -22,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> implements HomeView {
   LocationData? currentLocation;
+  final presenter = HomePresenter();
 
   bool? serviceEnabled;
   PermissionStatus? locationPermission;
@@ -29,18 +29,18 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
   MapboxMapController? mapController;
 
   bool isCameraPositionInitialized = false;
-  bool isSymbolsInitialized = false;
+  bool isPlaceSymbolsInitialized = false;
 
   User? user;
 
   @override
   void initState() {
-    widget.presenter.view = this;
-    widget.presenter.startUserListener(
+    presenter.view = this;
+    presenter.startUserListener(
       widget.userId,
     );
 
-    widget.presenter.initLocation();
+    presenter.initLocation();
     super.initState();
   }
 
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     if (locationPermission == PermissionStatus.denied) {
       return Scaffold(
         body: InkWell(
-            onTap: widget.presenter.requestLocationPermission,
+            onTap: presenter.requestLocationPermission,
             child: const Center(
                 child: Text(
               "You need to give the app location permission for it to work\nclick anywhere to give the app permission",
@@ -91,9 +91,10 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
     }
 
     if (isStyleLoaded &&
-        !isSymbolsInitialized &&
+        !isPlaceSymbolsInitialized &&
         mapController != null &&
-        currentLocation != null) {
+        currentLocation != null &&
+        user != null) {
       mapController!.addSymbols(
         [
           getCurrentLocationSymbol(currentLocation!),
@@ -101,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
         ],
       );
       setState(() {
-        isSymbolsInitialized = true;
+        isPlaceSymbolsInitialized = true;
       });
     }
 
@@ -121,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
                   child: Text("Sign Out"),
                 ),
               ],
-              onSelected: widget.presenter.onMenuItemSelected,
+              onSelected: presenter.onMenuItemSelected,
               icon: const Icon(Icons.menu),
             )
           ],
@@ -183,8 +184,8 @@ class _HomeScreenState extends State<HomeScreen> implements HomeView {
                 .animateCamera(getCameraUpdate(lat: place.lat, lon: place.lon));
           },
           onPlaceRemoved: (place) {
-            final symbol = mapController!.symbols.firstWhere(
-                (element) => element.options.geometry == getFavPlaceSymbol(place).geometry);
+            final symbol = mapController!.symbols.firstWhere((element) =>
+                element.options.geometry == getFavPlaceSymbol(place).geometry);
             mapController!.removeSymbol(symbol);
           },
         );

@@ -25,5 +25,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-//Color.fromRGBO(171, 144, 255, 1)

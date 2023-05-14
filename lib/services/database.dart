@@ -22,7 +22,8 @@ class DatabaseService {
         fromFirestore: User.fromFirestore, toFirestore: User.toFirestore);
   }
 
-  listenToUser({required String userId, required void Function(User) onUser}) {
+  void listenToUser(
+      {required String userId, required void Function(User) onUser}) {
     _usersCollection.doc(userId).snapshots().listen((event) {
       if (event.exists) {
         onUser(event.data()!);
@@ -37,7 +38,8 @@ class DatabaseService {
     });
   }
 
-  Future<void> deletePlace({required String userId, required Place place}) async {
+  Future<void> deletePlace(
+      {required String userId, required Place place}) async {
     await _usersCollection.doc(userId).update({
       UserFieldNames.places:
           FieldValue.arrayRemove([Place.toFirestore(place, null)])

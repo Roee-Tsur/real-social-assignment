@@ -28,9 +28,6 @@ class HomePresenter {
     bool serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        //Fluttertoast.showToast(msg: "No location service");
-      }
     }
 
     view.updateServiceAndPermissionStatus(serviceEnabled, locationPermission);

@@ -33,11 +33,16 @@ class SignUpScreen extends StatelessWidget implements SignUpView {
                     children: [
                       ButtonContainer(
                         child: OutlinedButton(
+                            style: const ButtonStyle(
+                                shape: MaterialStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                        borderRadius: uiBorderRadius))),
                             onPressed: () => presenter
                                 .signUpWithGoogleClicked()
                                 .then((value) =>
                                     value ? Navigator.pop(context) : null),
-                            child: const Text("Sign up with Google")),
+                            child: const Text("Sign up with Google",
+                                style: TextStyle(color: mainColor))),
                       ),
                       const Text(
                         "Or",

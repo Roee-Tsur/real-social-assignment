@@ -27,7 +27,6 @@ class SignInScreen extends StatelessWidget implements SignInView {
             constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.6),
             child: Form(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: formKey,
               child: AuthCard(
                 children: [
